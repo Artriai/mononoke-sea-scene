@@ -1,4 +1,4 @@
-/* 海坊主 · 浮世之舟 v2 — shot-based architectural reconstruction */
+/* 海坊主 · 浮世之舟 v3.1 — shot-based architectural reconstruction */
 (() => {
 'use strict';
 const $=id=>document.getElementById(id),T=window.THREE;
@@ -119,7 +119,10 @@ function portal(r,axis,at,a,b,center,style){const w=2.4,d={id:r.id,room:r,axis,a
  for(const side of [-1,1]){const p=center+side*w/4;const g=new T.PlaneGeometry(w/2,3.08),uv=g.attributes.uv,pos=g.attributes.position;for(let i=0;i<uv.count;i++){const s=p+(axis==='x'?-1:1)*pos.getX(i);uv.setX(i,style==='mural'?(s-center+w/2)/w:(s-a)/(b-a));}const o=new T.Mesh(g,style==='mural'?frontMaterial('shoji',.5,1):m);o.position.set(axis==='x'?at:p,y+1.64,axis==='x'?p:at);o.rotation.y=axis==='x'?Math.PI/2:0;scene.add(o);d.panels.push({o,side,base:p});}
  const sign=axis==='x'?(at>0?-1:1):-1;d.point=new T.Vector3(axis==='x'?at+sign*.10:center,y+1.60,axis==='x'?center:at-.10);
  const label=tex((c,w,h)=>{c.fillStyle='#e7d9b4';c.fillRect(0,0,w,h);c.strokeStyle='#72614b';c.lineWidth=5;c.strokeRect(8,8,w-16,h-16);c.fillStyle='#544b43';c.textAlign='center';c.font='38px Microsoft YaHei';c.fillText(r.short,w/2,68);c.font='25px Microsoft YaHei';c.fillText(r.level?'上层 '+r.level:'底层',w/2,111);},512,144);
- if(axis==='x')plane(at+sign*.16,y+2.66,center+1.75,1.10,.31,mat(null,label),0,Math.PI/2);else plane(center+1.75,y+2.66,at-.16,1.1,.31,mat(null,label));
+ // Plaques face the gallery: right-side and rear walls need reversed normals.
+ // Render only the printed front so its back can never show mirrored lettering.
+ const labelMaterial=mat(null,label);labelMaterial.side=T.FrontSide;
+ if(axis==='x')plane(at+sign*.16,y+2.66,center+1.75,1.10,.31,labelMaterial,0,sign*Math.PI/2);else plane(center+1.75,y+2.66,at-.16,1.1,.31,labelMaterial,0,Math.PI);
  return d;
 }
 function roomContents(r){const side=r.side,xc=(r.x0+r.x1)/2,zc=(r.z0+r.z1)/2,y=r.y;
@@ -296,5 +299,5 @@ function frame(){requestAnimationFrame(frame);const dt=Math.min(clock.getDelta()
  entries.forEach(e=>{e.marker.scale.setScalar(.25+Math.sin(elapsed*1.8+Number(e.n))*.025);e.marker.visible=active;});waves.forEach((o,i)=>{o.position.y=-2+Math.sin(elapsed*.4+i)*.11;});renderer.render(scene,camera);
 }frame();
 addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();});renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();$('error').hidden=false;});
-window.MONONOKE={get state(){return{version:3,active,level,room:currentRoom(camera.position.x,camera.position.z,walkHeight)?.id||null,roomCount:rooms.length,doors:doors.map(d=>({id:d.id,open:d.open,amount:d.amount})),targetDoor:targetDoor?.id||null,footHeight:walkHeight,position:camera.position.toArray(),yaw,pitch,visited:[...visited],night,characters:people.length,objects:scene.children.length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,fps:displayFps,tiers,ceilingHeight,flights,referenceCount:refShots.length};}};
+window.MONONOKE={get state(){return{version:3.1,active,level,room:currentRoom(camera.position.x,camera.position.z,walkHeight)?.id||null,roomCount:rooms.length,doors:doors.map(d=>({id:d.id,open:d.open,amount:d.amount})),targetDoor:targetDoor?.id||null,footHeight:walkHeight,position:camera.position.toArray(),yaw,pitch,visited:[...visited],night,characters:people.length,objects:scene.children.length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,fps:displayFps,tiers,ceilingHeight,flights,referenceCount:refShots.length};}};
 })();
