@@ -5,3 +5,5 @@
 #shade.comparison{background:none;backdrop-filter:none}
 .floor-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:20px 0 12px}.floor-tabs button{font-size:11px;padding:10px 4px;letter-spacing:0}.floor-tabs button[aria-pressed=true]{background:#455e50!important;color:#eee4c4!important}.room-plan{display:block;width:100%;max-height:430px;border:1px solid #7f9278;margin:12px 0 18px}.room-plan text{fill:#3c5143;font:11px "Microsoft YaHei",sans-serif}#inspect{max-width:calc(100vw - 30px)}
 @media(pointer:coarse){#joystick{background:#203b36a6;border:2px solid #f0e4b5c7;box-shadow:0 2px 20px #18312855}#stick{background:#eee6c7c7;border:1px solid #fff3d6}.touch-look{color:#fff0cc;background:#203b368f;padding:7px 10px}}
+
+.top-right #chapterLink{font-family:inherit;font-size:11px;letter-spacing:0;display:inline-block;color:var(--paper);background:#263a3ad1;border:1px solid #e1d3b357;padding:10px 12px;text-shadow:none}.top-right #chapterLink:hover{color:#fff2cf;border-color:#e1d3b3}@media(max-width:650px){.top-right #chapterLink{font-size:10px;padding:9px 8px}.top-right{gap:5px}}
