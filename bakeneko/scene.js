@@ -146,10 +146,11 @@ for(let z=16;z<35;z+=2)beam([-2.83,-.77,z],[-2.83,.12,z],.035,gold);
 beam([-2.83,.12,16],[-2.83,.12,36],.045,gold);
 tunnelObjects.push(...finishBatch());
 // Medicine chest, abandoned spectacles, notebook and small ritual scales are independent geometry.
+obstacle(-.96,-.28,4.53,4.97,0,.95);
 batching=true;
-box(-.92,.43,3.65,.66,.86,.38,'#4c362c');box(-.92,.88,3.65,.74,.08,.45,gold);
+box(-.62,.43,4.75,.66,.86,.38,'#4c362c');box(-.62,.88,4.75,.74,.08,.45,gold);
 const eyeTexture=texture((g,w,h)=>{g.fillStyle='#4b362b';g.fillRect(0,0,w,h);g.strokeStyle='#c9ac5f';g.lineWidth=14;g.strokeRect(12,12,w-24,h-24);g.beginPath();g.moveTo(65,220);g.bezierCurveTo(200,60,310,60,447,220);g.bezierCurveTo(315,385,190,385,65,220);g.stroke();g.beginPath();g.arc(256,220,68,0,7);g.stroke();g.fillStyle='#c9ac5f';g.beginPath();g.arc(256,220,25,0,7);g.fill();for(let i=0;i<7;i++){const a=i/7*Math.PI*2;g.beginPath();g.moveTo(256+Math.cos(a)*130,220+Math.sin(a)*130);g.lineTo(256+Math.cos(a)*165,220+Math.sin(a)*165);g.stroke();}},512,512);
-plane(-.92,.49,3.855,.58,.65,mat(null,eyeTexture,true),0,0);
+plane(-.62,.49,4.955,.58,.65,mat(null,eyeTexture,true),0,0);
 for(const x of [-.12,.12]){const o=mesh(new T.TorusGeometry(.10,.011,5,18),color('#aa8a51'));o.rotation.x=-Math.PI/2;o.position.set(x,.063,10.3);}
 beam([-.05,.065,10.30],[.05,.065,10.30],.012,gold);beam([-.20,.065,10.3],[-.22,.065,10.55],.012,gold);beam([.20,.065,10.3],[.22,.065,10.55],.012,gold);
 box(-1.16,.63,-4.17,.28,.018,.22,'#725045');plane(-1.16,.644,-4.17,.25,.20,wallMat,-Math.PI/2);
@@ -161,19 +162,20 @@ const eyeMat=mat('#9e383e'),eyes=[];for(const s of [-1,1]){const o=new T.Mesh(ne
 // Opening-day crowd uses intentional abstract paper silhouettes, not blurred video cutouts.
 const shadowTexture=texture((g,w,h)=>{g.clearRect(0,0,w,h);g.fillStyle='#dedbc3';g.beginPath();g.ellipse(w*.5,h*.16,w*.14,h*.11,0,0,7);g.fill();g.beginPath();g.moveTo(w*.36,h*.29);g.lineTo(w*.64,h*.29);g.lineTo(w*.74,h*.66);g.lineTo(w*.58,h*.67);g.lineTo(w*.57,h*.97);g.lineTo(w*.46,h*.97);g.lineTo(w*.44,h*.69);g.lineTo(w*.40,h*.97);g.lineTo(w*.29,h*.97);g.lineTo(w*.34,h*.62);g.lineTo(w*.25,h*.55);g.closePath();g.fill();g.fillStyle='#a7868b';g.beginPath();g.ellipse(w*.57,h*.17,w*.07,h*.085,0,0,7);g.fill();g.fillRect(w*.52,h*.32,w*.12,h*.28);},256,512,0);
 for(let i=0;i<26;i++){const o=new T.Mesh(new T.PlaneGeometry(.68,1.70),new T.MeshBasicMaterial({map:shadowTexture,transparent:true,alphaTest:.25,side:T.DoubleSide,color:i%4===0?'#c1c7b3':'#ffffff'}));o.position.set(3.65+(i%4)*1.02,.85,-17+Math.floor(i/4)*5.05);scene.add(o);crowds.push(o);}
-// Each major character is generated separately and loaded independently; entering never waits on the full set.
+// Standing cards stay clear of benches at every yaw; maxWidth also sets body collision.
+// Each major character loads independently; entering never waits on the full set.
 const characters=[
-{key:'medicine',name:'卖药郎',x:-.60,z:3.5,h:1.90,y:0},
-{key:'girl',name:'黄衣少女',x:1.47,z:1.5,h:1.38,y:.02},
-{key:'kimono',name:'和服女子',x:1.47,z:-.1,h:1.50,y:.02},
-{key:'boy',name:'蓝衣乘客',x:1.47,z:-2.0,h:1.10,y:.03},
-{key:'writer',name:'记事本乘客',x:-1.47,z:-4.15,h:1.44,y:.02},
-{key:'elder',name:'橙衣乘客',x:-1.47,z:-1.8,h:1.37,y:.02},
-{key:'gentleman',name:'粉衣绅士',x:-1.47,z:-9.45,h:1.48,y:.02},
-{key:'driver',name:'驾驶员',x:-.9,z:-12.67,h:1.76,y:.02}
+{key:'medicine',name:'卖药郎',x:-.52,z:3.55,h:1.90,y:.045,maxWidth:1.0,pose:'standing'},
+{key:'girl',asset:'girl-standing',name:'黄衣少女',x:.55,z:1.65,h:1.68,y:.045,maxWidth:.90,pose:'standing'},
+{key:'kimono',asset:'kimono-standing',name:'和服女子',x:.55,z:-.55,h:1.76,y:.045,maxWidth:.90,pose:'standing'},
+{key:'boy',asset:'boy-standing',name:'蓝衣乘客',x:.55,z:-3.10,h:1.24,y:.045,maxWidth:.74,pose:'standing'},
+{key:'writer',asset:'writer-standing',name:'记事本乘客',x:-.55,z:-5.25,h:1.77,y:.045,maxWidth:.90,pose:'standing'},
+{key:'elder',asset:'elder-standing',name:'橙衣乘客',x:-.55,z:-1.85,h:1.62,y:.045,maxWidth:.94,pose:'standing'},
+{key:'gentleman',asset:'gentleman-standing',name:'粉衣绅士',x:-.55,z:-9.15,h:1.83,y:.045,maxWidth:.94,pose:'standing'},
+{key:'driver',name:'驾驶员',x:-.9,z:-12.67,h:1.76,y:.045,maxWidth:.84,pose:'standing'}
 ];
 let assetsLoaded=0,assetFailures=[];const actorLoads=[];
-for(const a of characters){const promise=new Promise(resolve=>{const im=new Image();im.onload=()=>{const c=canvas(im.width,im.height),ctx=c.getContext('2d');ctx.drawImage(im,0,0);const data=ctx.getImageData(0,0,c.width,c.height).data;let x0=c.width,y0=c.height,x1=0,y1=0;for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++)if(data[(y*c.width+x)*4+3]>45){x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}const W=x1-x0+1,H=y1-y0+1;const crop=canvas(W,H);crop.getContext('2d').drawImage(im,x0,y0,W,H,0,0,W,H);const t=new T.CanvasTexture(crop);t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());const o=new T.Mesh(new T.PlaneGeometry(a.h*W/H,a.h),new T.MeshBasicMaterial({map:t,transparent:true,alphaTest:.5,side:T.DoubleSide}));o.position.set(a.x,a.y+a.h/2,a.z);o.userData.actor=a;scene.add(o);people.push(o);assetsLoaded++;$('loading').textContent='空间已展开 · 纸影 '+assetsLoaded+' / 8';resolve();};im.onerror=()=>{assetFailures.push(a.key);$('loading').textContent='部分纸影尚未载入 · 空间仍可探索';resolve();};im.src='assets/'+a.key+'.webp';});actorLoads.push(promise);}
+for(const a of characters){const promise=new Promise(resolve=>{const im=new Image();im.onload=()=>{const c=canvas(im.width,im.height),ctx=c.getContext('2d');ctx.drawImage(im,0,0);const data=ctx.getImageData(0,0,c.width,c.height).data;let x0=c.width,y0=c.height,x1=0,y1=0;for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++)if(data[(y*c.width+x)*4+3]>128){x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}const W=x1-x0+1,H=y1-y0+1;const crop=canvas(W,H);crop.getContext('2d').drawImage(im,x0,y0,W,H,0,0,W,H);const t=new T.CanvasTexture(crop);t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());const o=new T.Mesh(new T.PlaneGeometry(Math.min(a.h*W/H,a.maxWidth),a.h),new T.MeshBasicMaterial({map:t,transparent:true,alphaTest:.5,side:T.DoubleSide}));o.position.set(a.x,a.y+a.h/2,a.z);o.userData.actor=a;scene.add(o);people.push(o);assetsLoaded++;$('loading').textContent='空间已展开 · 纸影 '+assetsLoaded+' / 8';resolve();};im.onerror=()=>{assetFailures.push(a.key);$('loading').textContent='部分纸影尚未载入 · 空间仍可探索';resolve();};im.src='assets/'+(a.asset||a.key)+'.webp';});actorLoads.push(promise);}
 
 let active=false,panelOpen=false,mode='day',yaw=0,pitch=0,walkY=0,target=null,targetDoor=null,toastTimer,elapsed=0,fps=0,frames=0,fpsTime=0;
 const keys=new Set(),joy={x:0,y:0},direction=new T.Vector3(),delta=new T.Vector3();
@@ -193,9 +195,9 @@ const notes=[
 {id:'wind',title:'开通日的彩色风车',shot:51,pos:[2.8,1.05,-10.7],text:'开通日的站台围栏以红、黄、青、蓝四色风车组成。细立杆与折纸叶片沿站台重复，在大理石色空间中形成跳跃的颜色。',hint:'沿站台边缘寻找彩色风车'},
 {id:'body',title:'黄铜色的首发列车',shot:97,pos:[2.9,1.6,14.15],text:'列车端面呈暗黄铜色，窗洞、铆钉、车门和深红色弧顶带构成清楚的层次。轨道、底架与轮对也独立建模，避免把列车做成一面画。',hint:'从站台观察列车端面'},
 {id:'rings',title:'长椅上方的吊环',shot:350,pos:[0,2.35,-5.1],text:'07:55与20:45等镜头可确认低矮弧顶、密集吊环、支架和行李架。米白吊环悬在黑色长杆下，斜撑把内墙连接到顶棚。',hint:'走入车厢，抬头看两侧'},
-{id:'seat',title:'红色长椅与纸影乘客',shot:315,pos:[.5,1.15,.5],text:'车厢两侧是连续的红色长椅，侧门把座椅分成数段。八位主要人物根据本篇选出的画面重新生成插画；站台人群使用有意抽象的纸影。',hint:'靠近中段的红色长椅'},
-{id:'notebook',title:'记事本与平顶帽',shot:317,pos:[-.95,1,-4.15],text:'窄脸、八字眉、小胡子与棕色平顶帽，是记事本乘客的辨识点。手中的小本、铅笔与灰褐和服一起，补足车厢里细小的人物线索。',hint:'看左侧握着记事本的乘客'},
-{id:'chest',title:'金色眼纹的药箱',shot:280,pos:[-.92,.68,3.7],text:'药箱的正面有巨大的金色眼纹、短放射线与金属包边。它不是背景贴图中的一块颜色，而是可以绕看的独立小物件。',hint:'卖药郎旁边的深色药箱'},
+{id:'seat',title:'红色长椅与纸影乘客',shot:315,pos:[.5,1.15,.5],text:'车厢两侧是连续的红色长椅，侧门把座椅分成数段。八位主要人物根据本篇选出的画面重新生成插画。为减少纸片转动时与座椅相交，乘客统一采用站姿，并与长椅留出间距；站台人群使用有意抽象的纸影。',hint:'靠近中段的红色长椅'},
+{id:'notebook',title:'记事本与平顶帽',shot:317,pos:[-.55,1.15,-5.25],text:'窄脸、八字眉、小胡子与棕色平顶帽，是记事本乘客的辨识点。手中的小本、铅笔与灰褐和服一起，补足车厢里细小的人物线索。',hint:'看左侧握着记事本的乘客'},
+{id:'chest',title:'金色眼纹的药箱',shot:280,pos:[-.62,.68,4.75],text:'药箱的正面有巨大的金色眼纹、短放射线与金属包边。它不是背景贴图中的一块颜色，而是可以绕看的独立小物件。',hint:'卖药郎旁边的深色药箱'},
 {id:'gauges',title:'驾驶室的黄铜仪表',shot:195,pos:[.2,1.45,-13.85],text:'依据04:31、05:15、10:47和12:09的近景，重建两只手轮、三面压力表、操纵柜和驾驶门旁的信号按钮。驾驶室与客舱之间有能开合的门。',hint:'推开车厢前端的驾驶室门'},
 {id:'glasses',title:'遗落在端门前的眼镜',shot:198,pos:[0,.10,10.3],text:'10:50至10:51的连续镜头，把敞开的端门、后方轨道与地上的眼镜联系在一起。细框眼镜放在浅色分板地面上，须低头才能看清。',hint:'在后端门附近低头观察'},
 {id:'balance',title:'沿中轴展开的结界秤',shot:345,pos:[.1,1.25,5.6],text:'15:13至20:27的多个镜头呈现秤阵的纵向节奏。紫红轴心、黄铜细杆与两侧小盘是独立立体结构；切换「隧道异变」可看见。',hint:'切换到隧道异变，观察秤阵',veil:true},
@@ -212,7 +214,7 @@ function closePanel(){panelOpen=false;$('panel').hidden=true;$('shade').hidden=t
 $('closePanel').onclick=closePanel;$('shade').onclick=closePanel;
 function teleport(id){const p=places.find(x=>x.id===id)||places[0];if(p.mode)changeMode(p.mode,false);else if((p.id==='station'||p.id==='hall'||p.id==='door')&&mode==='veil')changeMode('day',false);camera.position.set(p.x,p.y+1.60,p.z);walkY=p.y;yaw=p.yaw;pitch=p.pitch||0;if(p.open){const d=doors.find(d=>d.id===p.open);d.open=true;d.t=1;animateDoors(1);}lastZone='';}
 function visit(id){teleport(id);closePanel();toast(id==='door'||id==='cabdoor'?'面对房门 · 按 E 或点击提示推开':'拖动环顾 · 可以继续步行探索');}
-function changeMode(m,announce=true){mode=m;for(const o of stationObjects)o.visible=m!=='veil';for(const o of crowds)o.visible=m==='day';for(const o of people)o.visible=m!=='empty';for(const o of scales)o.visible=m==='veil';for(const o of eyes)o.visible=m==='veil';scene.background.set(m==='veil'?'#181f23':'#444247');scene.fog.color.set(m==='veil'?'#1c2327':'#343236');$('modeBtn').textContent='◐ '+({day:'开通日',veil:'隧道异变',empty:'空车厢'}[m]);if(m==='veil'&&active&&(camera.position.x>1.85||walkY>1))teleport('car');lastZone='';if(announce)toast({day:'福寿站 · 回到开通之日',veil:'列车入暗 · 结界秤阵显现',empty:'纸影退去 · 观察空车厢的结构'}[m]);}
+function changeMode(m,announce=true){mode=m;for(const o of stationObjects)o.visible=m!=='veil';for(const o of crowds)o.visible=m==='day';for(const o of people)o.visible=m!=='empty';for(const o of scales)o.visible=m==='veil';for(const o of eyes)o.visible=m==='veil';scene.background.set(m==='veil'?'#181f23':'#444247');scene.fog.color.set(m==='veil'?'#1c2327':'#343236');$('modeBtn').textContent='◐ '+({day:'开通日',veil:'隧道异变',empty:'空车厢'}[m]);if(m==='veil'&&active&&(camera.position.x>1.85||walkY>1))teleport('car');if(m!=='empty')clearActorOverlap();lastZone='';if(announce)toast({day:'福寿站 · 回到开通之日',veil:'列车入暗 · 结界秤阵显现',empty:'纸影退去 · 观察空车厢的结构'}[m]);}
 function mapPanel(){showPanel('<h2 id="panelTitle">车站舆图</h2><p>站厅、站台、车厢和驾驶室可以步行连接。选择位置可直接前往；到门前按 E，或点击画面提示开门。</p><svg class="map-plan" viewBox="0 0 500 265" role="img" aria-label="福寿站台、列车与售票站厅平面图"><rect x="32" y="28" width="330" height="56" fill="#b1b898"/><rect x="363" y="24" width="110" height="70" fill="#b1b898"/><rect x="370" y="95" width="45" height="45" fill="#a4ab8c"/><path d="M370 99h45M370 107h45M370 115h45M370 123h45M370 131h45" stroke="#596b55"/><text x="162" y="62">福 寿 站 台</text><text x="388" y="62">售票站厅</text><path d="M20 169h460M20 192h460" stroke="#5a6757" stroke-width="4"/><rect x="66" y="144" width="335" height="76" fill="#bb9a65" stroke="#4f5e4b" stroke-width="3"/><path d="M98 144v76M368 144v76" stroke="#465847" stroke-width="2"/><rect x="141" y="151" width="173" height="12" fill="#9a5864"/><rect x="141" y="201" width="173" height="12" fill="#9a5864"/><text x="180" y="186">红 椅 车 厢</text><text x="74" y="185" font-size="10">驾驶室</text><text x="370" y="185" font-size="10">端间</text><path d="M138 144v-31M322 144v-31" stroke="#9b4c51" stroke-width="6"/><text x="32" y="249" font-size="10">红线：站台侧车门　　站厅与连续进深为探索补全</text></svg><div class="places">'+places.map(p=>'<button data-place="'+p.id+'">'+p.name+'<span>'+p.sub+'</span></button>').join('')+'</div><small>依据61张按镜头内容精选的参考重建；尺寸、站厅连接和检修走道含推测性补全。</small>','探索 · 站台与车厢');document.querySelectorAll('[data-place]').forEach(b=>b.onclick=()=>visit(b.dataset.place));}
 function evidence(category='all'){const categories={all:'全部',station:'站台与外观',car:'车厢结构',people:'人物与物件'},stationIds=[27,28,32,35,36,37,38,49,51,52,54,63,74,97,125,189,338],carIds=[69,75,98,99,145,147,148,151,163,164,168,178,190,197,213,217,238,245,284,290,304,344,350];const list=refs.filter(r=>category==='all'||(category==='station'?stationIds.includes(r.shot):category==='car'?carIds.includes(r.shot):!stationIds.includes(r.shot)&&!carIds.includes(r.shot)));showPanel('<h2 id="panelTitle">镜头对照</h2><p>对视频做镜头切换检测后，逐页查看363个候选画面，按空间、人物和陈设筛选61张参考。空车厢、俯视与反打共同校准布局。</p><div class="mode-options">'+Object.entries(categories).map(([k,v])=>'<button data-category="'+k+'" aria-pressed="'+(category===k)+'">'+v+'</button>').join('')+'</div><div class="ref-grid">'+list.map(r=>'<button data-shot="'+r.shot+'"><img src="'+r.file+'" alt="'+r.label+'" loading="lazy"><span>'+stamp(r.time)+' · '+r.label+'</span></button>').join('')+'</div>','原片 · 61帧空间考据');document.querySelectorAll('[data-category]').forEach(b=>b.onclick=()=>evidence(b.dataset.category));document.querySelectorAll('[data-shot]').forEach(b=>b.onclick=()=>referenceDetail(+b.dataset.shot));}
 function referenceDetail(id){const r=ref(id);showPanel('<small>镜头 '+r.shot+' · 精确取帧 '+r.time.toFixed(3)+' 秒</small><h2 id="panelTitle">'+r.label+'</h2><img src="'+r.file+'" alt="'+r.label+'"><p>此画面在检测到镜头变化后选取，完整原始分辨率为1280 × 720。</p><button id="backRefs">返回镜头目录</button>','原片 · '+stamp(r.time));$('backRefs').onclick=()=>evidence();}
@@ -224,6 +226,14 @@ function help(){showPanel('<h2 id="panelTitle">如何探索地下铁</h2><p><b>�
 function toggleDoor(d){if(!d)return;const cross=d.axis==='x'?camera.position.x:camera.position.z,along=d.axis==='x'?camera.position.z:camera.position.x;if(d.open&&Math.abs(cross-d.at)<.48&&Math.abs(along-d.center)<d.w/2+.16){toast('先离开门槛，再关门');return;}d.open=!d.open;toast((d.open?'推开 · ':'合上 · ')+d.label);}
 function animateDoors(dt){for(const d of doors){d.t+=(Number(d.open)-d.t)*Math.min(1,dt*9);for(const p of d.panels)p.group.position[d.axis==='x'?'z':'x']=p.base+p.s*(d.w*.50+.04)*d.t;}}
 function interact(){if(targetDoor)toggleDoor(targetDoor);else if(target)observe(target);}
+function clearActorOverlap(){
+ if(!active||mode==='empty'||!characters.some(a=>Math.abs(walkY-a.y)<.25&&Math.hypot(camera.position.x-a.x,camera.position.z-a.z)<a.maxWidth/2+.17))return;
+ const x=camera.position.x,z=camera.position.z;
+ for(const r of [.25,.5,.75,1,1.25])for(let i=0;i<12;i++){
+  const a=i*Math.PI/6,nx=x+Math.cos(a)*r,nz=z+Math.sin(a)*r,y=floorAt(nx,nz);
+  if(y!==null){camera.position.set(nx,y+1.6,nz);walkY=y;return;}
+ }
+}
 function floorAt(x,z){
  const candidates=[];
  if(Math.abs(x)<1.84&&z> -14.70&&z<14.70)candidates.push(0);
@@ -241,7 +251,7 @@ function floorAt(x,z){
  const r=.17;for(const o of obstacles)if(y+1.4>o.y0&&y+.1<o.y1&&x>o.x0-r&&x<o.x1+r&&z>o.z0-r&&z<o.z1+r)return null;
  for(const d of doors){if(Math.abs(y-d.y)>.7||d.t>.92)continue;const cross=d.axis==='x'?x:z,along=d.axis==='x'?z:x;if(Math.abs(cross-d.at)<.20&&Math.abs(along-d.center)<d.w/2+.1)return null;}
  if(Math.abs(x)<.13&&Math.min(...[-10,0,10].map(v=>Math.abs(v-z)))<.13&&Math.abs(y)<.1)return null;
- if(mode!=='empty')for(const a of characters)if(a.key==='medicine'||a.key==='driver')if(Math.hypot(x-a.x,z-a.z)<.27&&Math.abs(y)<.2)return null;
+ if(mode!=='empty')for(const a of characters)if(Math.hypot(x-a.x,z-a.z)<a.maxWidth/2+.17&&Math.abs(y-a.y)<.25)return null;
  return y;
 }
 function move(dx,dz){const x=camera.position.x,z=camera.position.z;let nx=x+dx,nz=z+dz,y=floorAt(nx,nz);if(y===null){y=floorAt(nx,z);if(y!==null)nz=z;else{y=floorAt(x,nz);if(y===null)return;nx=x;}}camera.position.x=nx;camera.position.z=nz;walkY=y;camera.position.y+=(y+1.60-camera.position.y)*.55;}
@@ -275,5 +285,5 @@ function frame(){requestAnimationFrame(frame);const dt=Math.min(.05,clock.getDel
 frame();
 addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,coarse()?1.25:1.6));camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();});
 renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();$('error').hidden=false;});
-window.BAKENEKO={get state(){return{chapter:'bakeneko',version:1,active,mode,position:camera.position.toArray(),footHeight:walkY,yaw,pitch,zone:lastZone,characters:people.length,assetFailures:[...assetFailures],referenceCount:refs.length,visited:[...visited],doors:doors.map(d=>({id:d.id,open:d.open,amount:d.t})),targetDoor:targetDoor?.id||null,target:target?.id||null,fps,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles};}};
+window.BAKENEKO={get state(){return{chapter:'bakeneko',version:2,actorPose:'standing',active,mode,position:camera.position.toArray(),footHeight:walkY,yaw,pitch,zone:lastZone,characters:people.length,assetFailures:[...assetFailures],referenceCount:refs.length,visited:[...visited],doors:doors.map(d=>({id:d.id,open:d.open,amount:d.t})),targetDoor:targetDoor?.id||null,target:target?.id||null,fps,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles};}};
 })();
